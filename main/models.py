@@ -12,35 +12,32 @@ from sklearn.model_selection import GridSearchCV
 import numpy as np
 
 def get_models() -> dict:
-    """Return dictionary of all 5 models with optimized hyperparameters"""
+    """Return dictionary of all 5 models.
+    - class_weight='balanced' on LR/DT/RF handles class imbalance without SMOTE (per paper).
+    - Hyperparameters are reasonable defaults close to paper's intent.
+    """
     models = {
         'Logistic Regression': LogisticRegression(
             max_iter=1000,
-            C=0.5,  # Regularization
-            solver='lbfgs',
+            class_weight='balanced',
             random_state=42
         ),
         'KNN': KNeighborsClassifier(
-            n_neighbors=7,  # Optimized from 5
-            weights='distance',  # Weight by distance
-            metric='minkowski'
+            n_neighbors=5,
+            weights='distance'
         ),
-        'Naive Bayes': GaussianNB(
-            var_smoothing=1e-8  # Reduced smoothing
-        ),
+        'Naive Bayes': GaussianNB(),
         'Decision Tree': DecisionTreeClassifier(
-            max_depth=15,  # Increased from 10
-            min_samples_split=5,
-            min_samples_leaf=2,
-            criterion='entropy',  # Information gain
+            class_weight='balanced',
             random_state=42
         ),
         'Random Forest': RandomForestClassifier(
-            n_estimators=200,  # Increased from 100
-            max_depth=15,  # Increased from 10
+            n_estimators=200,
+            max_depth=15,
             min_samples_split=5,
             min_samples_leaf=2,
             max_features='sqrt',
+            class_weight='balanced',
             bootstrap=True,
             random_state=42,
             n_jobs=-1

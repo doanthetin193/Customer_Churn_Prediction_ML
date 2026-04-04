@@ -9,9 +9,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 def create_target_variable(df: pd.DataFrame) -> pd.DataFrame:
-    """Create binary target: 1 = Churned, 0 = Not Churned"""
+    """Create binary target: 1 = Churned, 0 = Not Churned.
+    Excludes 'Joined' customers (new customers who have not yet had a chance to churn),
+    matching the paper's dataset of ~4601 active customers.
+    """
     df = df.copy()
+    # Keep only Churned and Stayed customers (drop Joined)
+    df = df[df['Customer Status'].isin(['Churned', 'Stayed'])].reset_index(drop=True)
     df['Churn'] = (df['Customer Status'] == 'Churned').astype(int)
+    print(f"✓ Filtered to Churned+Stayed only: {len(df)} customers")
     return df
 
 def select_features(df: pd.DataFrame) -> pd.DataFrame:

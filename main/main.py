@@ -35,11 +35,11 @@ def main():
     
     # Step 2: Preprocess data
     print("\n🔧 STEP 2: PREPROCESSING DATA")
-    data = preprocess_data(df, use_smote=True)  # Enable SMOTE for better Sensitivity
+    data = preprocess_data(df, use_smote=False)  # Paper does NOT use SMOTE
     
     # Step 3: Train models
     print("\n🤖 STEP 3: TRAINING MODELS")
-    trained_models = train_all_models(data['X_train'], data['y_train'])
+    trained_models = train_all_models(data['X_train'], data['y_train'], tune_rf=False)  # Paper does not mention GridSearchCV
     
     # Step 4: Make predictions
     print("\n📊 STEP 4: MAKING PREDICTIONS")

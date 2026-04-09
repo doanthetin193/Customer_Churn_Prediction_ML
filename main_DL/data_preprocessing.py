@@ -99,6 +99,25 @@ def scale_features(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple[np.ndar
     return X_train_scaled, X_test_scaled, scaler
 
 
+def add_interaction_features(df: pd.DataFrame) -> pd.DataFrame:
+    """Add domain-informed interaction features for DL improvement.
+
+    Based on SHAP analysis, the most influential features are:
+    Contract, Tenure, Monthly Charge, Number of Referrals, Internet Service.
+    These interactions let the model learn non-linear relationships directly.
+    """
+    data = df.copy()
+    # Monthly cost burden: high charge on short tenure = churn risk
+    data["Monthly_per_Tenure"] = data["Monthly Charge"] / (data["Tenure in Months"] + 1)
+    # Average monthly revenue per customer
+    data["Revenue_per_Month"] = data["Total Revenue"] / (data["Tenure in Months"] + 1)
+    # Referral × Tenure: loyal customers who also refer others
+    data["Referral_x_Tenure"] = data["Number of Referrals"] * data["Tenure in Months"]
+    # Monthly vs Total charge ratio: detects billing anomalies
+    data["Charge_Ratio"] = data["Monthly Charge"] / (data["Total Charges"] + 1)
+    return data
+
+
 def preprocess_data(
     df: pd.DataFrame,
     test_size: float = 0.25,
@@ -113,6 +132,7 @@ def preprocess_data(
     data = create_target_variable(df)
     data = select_features(data)
     data = handle_missing_values(data)
+    data = add_interaction_features(data)
     data, encoders = encode_categorical(data)
 
     X = data.drop(columns=["Churn"])

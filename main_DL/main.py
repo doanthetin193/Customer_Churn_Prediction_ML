@@ -9,7 +9,6 @@ import sys
 
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.utils.class_weight import compute_class_weight
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -47,17 +46,8 @@ def main() -> dict:
         stratify=data["y_train"],
     )
 
-    # Compute class weights to handle imbalance without oversampling
-    class_weights = compute_class_weight(
-        class_weight="balanced",
-        classes=np.array([0, 1]),
-        y=y_train,
-    )
-    class_weight_dict = {
-        0: float(class_weights[0]),
-        1: float(class_weights[1]),
-    }
-    print(f"Class weights: {class_weight_dict}")
+    # Focal loss (alpha=0.75) handles class imbalance directly — no class_weight needed.
+    print(f"Train size: {len(X_train)}, Val size: {len(X_val)}")
 
     print("\nSTEP 4: Training MLP")
     model, history = train_mlp(
@@ -65,10 +55,10 @@ def main() -> dict:
         y_train,
         X_val,
         y_val,
-        class_weight=class_weight_dict,
-        epochs=150,
-        batch_size=64,
-        patience=20,
+        class_weight=None,
+        epochs=200,
+        batch_size=32,
+        patience=30,
     )
 
     print("\nSTEP 4b: Finding optimal classification threshold on validation set")

@@ -15,9 +15,9 @@ Trách nhiệm - Chuyên nghiệp - Chất lượng - Sáng tạo - Nhân văn
 
 ---
 
-**Họ và tên sinh viên:** [Điền thông tin]  
-**Mã số sinh viên:** [Điền thông tin]  
-**Lớp:** [Điền thông tin]  
+**Họ và tên sinh viên:** Đoàn Thế Tín  
+**Mã số sinh viên:** 4551190056  
+**Lớp:** KTPM45  
 **Ngành:** Kỹ thuật phần mềm  
 **Khoa:** Công nghệ thông tin  
 **Giảng viên hướng dẫn:** TS. Lê Quang Hùng  
@@ -25,6 +25,14 @@ Trách nhiệm - Chuyên nghiệp - Chất lượng - Sáng tạo - Nhân văn
 ---
 
 **Bình Định, 2026**
+
+---
+
+## Tóm tắt (Abstract)
+
+Bài tiểu luận này nghiên cứu bài toán dự đoán rời bỏ khách hàng (customer churn) trong ngành viễn thông dựa trên dataset Telecom Customer Churn của Maven Analytics với 6.589 mẫu sau tiền xử lý. Công trình được thực hiện theo hai hướng song song: **(1) Tái lập bài báo** Chang et al. (2024) bằng cách triển khai 5 mô hình học máy cổ điển (Logistic Regression, KNN, Naïve Bayes, Decision Tree, Random Forest) với phương pháp xử lý mất cân bằng lớp `class_weight='balanced'`, không dùng SMOTE — Random Forest đạt Accuracy **86.65%** và AUC **0.9264**, lệch chỉ 0.29% so với bài báo gốc; **(2) Nâng cấp bằng học sâu** sử dụng kiến trúc Residual MLP với Swish activation, Focal Loss (α=0.75, γ=2.0), AdamW optimizer và 4 interaction features tự tạo (29 features tổng cộng) — đạt Sensitivity **88.22%**, cao nhất trong tất cả 6 mô hình và vượt Sensitivity của bài báo gốc (85.47%). Mô hình Random Forest được giải thích bằng LIME và SHAP, xác định Contract, Tenure và dịch vụ Internet là nhóm đặc trưng then chốt. Kết quả cho thấy ML và DL bổ sung nhau: RF tốt hơn về Accuracy tổng thể (86.65%) và Specificity (91.45%), trong khi MLP vượt trội về khả năng phát hiện churner (Sensitivity 88.22%).
+
+**Từ khóa:** Customer churn prediction, Random Forest, Residual MLP, Focal Loss, LIME, SHAP, XAI.
 
 ---
 

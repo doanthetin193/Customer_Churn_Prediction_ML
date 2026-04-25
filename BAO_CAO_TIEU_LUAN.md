@@ -39,6 +39,7 @@ Bài tiểu luận này nghiên cứu bài toán dự đoán rời bỏ khách h
 ## Mục lục
 
 1. [Giới thiệu](#1-giới-thiệu)
+   - 1.1 Nghiên cứu liên quan
 2. [Bài toán](#2-bài-toán)
 3. [Cơ sở lý thuyết](#3-cơ-sở-lý-thuyết)
 4. [Phương pháp thực nghiệm](#4-phương-pháp-thực-nghiệm)
@@ -62,6 +63,12 @@ Bài tiểu luận này dựa trên nghiên cứu gốc của Chang et al. (2024
 > Victor Chang, Karl Hall, Qianwen Ariel Xu, Folakemi Ololade Amao, Meghana Ashok Ganatra, Vladlena Benson. *Prediction of Customer Churn Behavior in the Telecommunication Industry Using Machine Learning Models*. Algorithms 2024, 17(6), 231. https://doi.org/10.3390/a17060231.
 
 Bài báo đề xuất quy trình so sánh 5 thuật toán học máy cổ điển (Logistic Regression, KNN, Naive Bayes, Decision Tree, Random Forest) trên dataset viễn thông Maven Analytics, đánh giá bằng 4 chỉ số (Accuracy, Sensitivity, Specificity, AUC), và giải thích mô hình bằng LIME và SHAP.
+
+### 1.1 Nghiên cứu liên quan
+
+Bài toán dự đoán churn khách hàng đã được nghiên cứu rộng rãi trong những năm gần đây. Ở phạm vi quốc tế, Verbeke et al. (2012) chỉ ra rằng các mô hình ensemble như Random Forest vượt trội so với các phương pháp đơn lẻ nhờ tính ổn định cao trên dữ liệu mất cân bằng. Zhu et al. (2017) đề xuất kết hợp SMOTE với các bộ phân loại truyền thống để xử lý imbalance, tuy nhiên Chen & Popovich (2002) lưu ý rằng SMOTE có thể gây overfitting nếu dùng không đúng cách. Về học sâu, Milosevic et al. (2017) áp dụng MLP nhiều lớp cho bài toán churn và chứng minh khả năng học biểu diễn phi tuyến vượt trội hơn Logistic Regression trên các tập dữ liệu lớn. Gần đây, việc kết hợp Focal Loss (Lin et al., 2017) vào các bài toán phân loại mất cân bằng đã cho thấy cải thiện đáng kể về Sensitivity mà không cần oversampling.
+
+Trong nước, các nghiên cứu về churn prediction trong ngành viễn thông Việt Nam còn hạn chế về mặt công bố học thuật, chủ yếu dừng lại ở mức ứng dụng nội bộ doanh nghiệp. Bài tiểu luận này đóng góp bằng cách tái lập và so sánh trực tiếp với bài báo quốc tế Chang et al. (2024), đồng thời nâng cấp bằng kiến trúc DL hiện đại kết hợp XAI — hướng đi còn ít được khai thác trong các công bố tiếng Việt.
 
 Trong bài tiểu luận này, chúng tôi thực hiện hai phần song song:
 

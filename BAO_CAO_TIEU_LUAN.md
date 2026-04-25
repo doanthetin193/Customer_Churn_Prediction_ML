@@ -297,7 +297,7 @@ flowchart TD
     D --> E
     D --> F[find_optimal_threshold\nYouden J]
     E --> F
-    F --> G[threshold ≈ 0.32]
+    F --> G[threshold ≈ 0.33]
     G --> H[Dự đoán trên X_test]
     H --> I[Đánh giá kết quả cuối]
 ```
@@ -403,7 +403,7 @@ Training sử dụng EarlyStopping (monitor `val_auc`, patience=30) và ReduceLR
 
 Scanning 90 giá trị threshold từ 0.05 đến 0.94 trên validation set (988 mẫu), Youden's J đạt cực đại tại:
 
-$$t^* \approx 0.32, \quad J^* = 0.7415$$
+$$t^* \approx 0.33, \quad J^* \approx 0.74$$
 
 ---
 
@@ -425,16 +425,16 @@ $$t^* \approx 0.32, \quad J^* = 0.7415$$
 
 ---
 
-**Kết quả Residual MLP trên tập test (1.648 mẫu, threshold ≈ 0.32):**
+**Kết quả Residual MLP trên tập test (1.648 mẫu, threshold ≈ 0.33):**
 
 | Chỉ số | Giá trị |
 |---|---:|
-| Accuracy | 81.61% |
-| **Sensitivity** | **87.37%** |
-| Specificity | 79.34% |
-| AUC | 0.9236 |
-| Threshold | 0.32 |
-| Youden's J | 0.7415 |
+| Accuracy | 81.37% |
+| **Sensitivity** | **88.22%** |
+| Specificity | 78.66% |
+| AUC | 0.9245 |
+| Threshold | 0.33 |
+| Youden's J | ≈ 0.74 |
 
 ---
 
@@ -449,35 +449,35 @@ $$t^* \approx 0.32, \quad J^* = 0.7415$$
 | Naïve Bayes | 80.10% | 78.59% | 80.69% | 0.8771 |
 | Decision Tree | 82.10% | 68.09% | 87.64% | 0.7787 |
 | Random Forest | **86.65%** | 74.52% | **91.45%** | **0.9264** |
-| **MLP (DL)** | 81.61% | **87.37%** | 79.34% | 0.9236 |
+| **MLP (DL)** | 81.37% | **88.22%** | 78.66% | 0.9245 |
 
 ```mermaid
 xychart-beta
     title "So sanh cac mo hinh (Accuracy, Sensitivity, Specificity, AUC)"
     x-axis [LR, KNN, NB, DT, RF, MLP]
     y-axis "Score" 0 --> 1
-    bar [0.8046, 0.8101, 0.8010, 0.8210, 0.8665, 0.8161]
-    line [0.8672, 0.6681, 0.7859, 0.6809, 0.7452, 0.8737]
+    bar [0.8046, 0.8101, 0.8010, 0.8210, 0.8665, 0.8137]
+    line [0.8672, 0.6681, 0.7859, 0.6809, 0.7452, 0.8822]
 ```
 
 **Nhận xét so sánh:**
 
-**Về Accuracy:** Random Forest vẫn dẫn đầu (86.65%). MLP đứng thứ 4 (81.61%), tương đương LR và KNN.
+**Về Accuracy:** Random Forest vẫn dẫn đầu (86.65%). MLP đứng thứ 4 (81.37%), tương đương LR và KNN.
 
-**Về Sensitivity (phát hiện churner):** MLP đạt **87.37% — cao nhất trong tất cả 6 mô hình**, vượt LR (86.72%) và đặc biệt **vượt cả Sensitivity của bài báo gốc (85.47%)**. Nhờ Focal Loss (tập trung học hard examples), skip connections (gradient flow tốt hơn), và threshold 0.32 được tối ưu theo Youden's J, MLP bắt được nhiều churner hơn RF (74.52%) đến 12.85 điểm phần trăm. Trong bài toán churn, FN (bỏ sót churner) thường nguy hiểm hơn FP — MLP phù hợp hơn khi ưu tiên không bỏ sót.
+**Về Sensitivity (phát hiện churner):** MLP đạt **88.22% — cao nhất trong tất cả 6 mô hình**, vượt LR (86.72%) và đặc biệt **vượt cả Sensitivity của bài báo gốc (85.47%)**. Nhờ Focal Loss (tập trung học hard examples), skip connections (gradient flow tốt hơn), và threshold 0.33 được tối ưu theo Youden's J, MLP bắt được nhiều churner hơn RF (74.52%) đến 13.70 điểm phần trăm. Trong bài toán churn, FN (bỏ sót churner) thường nguy hiểm hơn FP — MLP phù hợp hơn khi ưu tiên không bỏ sót.
 
-**Về Specificity:** RF cao nhất (91.45%). MLP thấp hơn RF (79.34%) — trade-off tất yếu khi Sensitivity tăng: để phát hiện nhiều Churned hơn, model chấp nhận nhiều False Positive hơn.
+**Về Specificity:** RF cao nhất (91.45%). MLP thấp hơn RF (78.66%) — trade-off tất yếu khi Sensitivity tăng: để phát hiện nhiều Churned hơn, model chấp nhận nhiều False Positive hơn.
 
-**Về AUC:** RF tốt nhất (0.9264). MLP đứng thứ 2 (0.9236) — chỉ kém RF 0.0028, vượt KNN (0.8521), NB (0.8771), DT (0.7787). Cả RF và MLP đều đạt ngưỡng "Excellent" (AUC > 0.90).
+**Về AUC:** RF tốt nhất (0.9264). MLP đứng thứ 2 (0.9245) — chỉ kém RF 0.0019, vượt KNN (0.8521), NB (0.8771), DT (0.7787). Cả RF và MLP đều đạt ngưỡng "Excellent" (AUC > 0.90).
 
 **Kết luận so sánh:**
 
 | Mục tiêu kinh doanh | Mô hình khuyến nghị |
 |---|---|
-| Giảm thiểu tối đa tỉ lệ bỏ sót churner (tối đa Sensitivity) | **MLP (DL)** — 87.37% |
+| Giảm thiểu tối đa tỉ lệ bỏ sót churner (tối đa Sensitivity) | **MLP (DL)** — 88.22% |
 | Độ chính xác tổng thể và AUC cao nhất | **Random Forest** — 86.65%, AUC 0.9264 |
 | Tránh báo động sai nhiều nhất | **Random Forest** — Specificity 91.45% |
-| Cân bằng tốt Sensitivity và Specificity | **MLP** (J=0.7415) |
+| Cân bằng tốt Sensitivity và Specificity | **MLP** (J≈0.74) |
 
 ---
 
@@ -557,16 +557,16 @@ Bài tiểu luận đã thực hiện đầy đủ hai mục tiêu đề ra:
 
 **Phần ML (tái lập bài báo):** Pipeline 5 mô hình học máy được triển khai đúng phương pháp Chang et al. (2024). Random Forest đạt Accuracy 86.65% (bài báo: 86.94%, lệch 0.29%), AUC 0.9264 (bài báo: 0.95), xác nhận kết luận chính của bài báo. Lệch số liệu ở mức chấp nhận được cho bản tái lập độc lập.
 
-**Phần DL (nâng cấp):** Residual MLP với skip connections, Swish activation, Focal Loss (α=0.75), và 4 interaction features (29 features tổng cộng) đạt **Sensitivity 87.37% — cao nhất trong tất cả 6 mô hình và vượt cả Sensitivity của bài báo gốc (85.47%)**. DL vượt RF về khả năng phát hiện churner (+12.85 điểm %) trong khi AUC đạt 0.9236 — chỉ kém RF 0.0028.
+**Phần DL (nâng cấp):** Residual MLP với skip connections, Swish activation, Focal Loss (α=0.75), và 4 interaction features (29 features tổng cộng) đạt **Sensitivity 88.22% — cao nhất trong tất cả 6 mô hình và vượt cả Sensitivity của bài báo gốc (85.47%)**. DL vượt RF về khả năng phát hiện churner (+13.70 điểm %) trong khi AUC đạt 0.9245 — chỉ kém RF 0.0019.
 
 ### 6.2 So sánh tổng kết hai pipeline
 
 | Tiêu chí | ML Pipeline (RF) | DL Pipeline (MLP) |
 |---|---|---|
-| **Accuracy** | **86.65%** | 81.61% |
-| **Sensitivity** | 74.52% | **87.37%** |
-| **Specificity** | **91.45%** | 79.34% |
-| **AUC** | **0.9264** | 0.9236 |
+| **Accuracy** | **86.65%** | 81.37% |
+| **Sensitivity** | 74.52% | **88.22%** |
+| **Specificity** | **91.45%** | 78.66% |
+| **AUC** | **0.9264** | 0.9245 |
 | Thời gian training | ~15 giây | ~5–10 phút |
 | Khả năng giải thích | LIME + SHAP | Black box (không XAI) |
 | Phụ thuộc thư viện | scikit-learn | TensorFlow/Keras |
